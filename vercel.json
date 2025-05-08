@@ -1,14 +1,5 @@
 {
     "version": 2,
-    "functions": {
-      "api/get-binance-trades.js": {
-        "memory": 128,
-        "maxDuration": 10,
-        "regions": [
-          "fra1" 
-        ]
-      }
-    },
     "builds": [
       {
         "src": "package.json",
@@ -24,5 +15,11 @@
         "src": "/(.*)",
         "dest": "/index.html"
       }
-    ]
+    ],
+    "functions": {
+      "api/get-binance-trades.js": {
+        "memory": 128,
+        "maxDuration": 10
+      }
+    }
   }
