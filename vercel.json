@@ -1,0 +1,28 @@
+{
+    "version": 2,
+    "functions": {
+      "api/get-binance-trades.js": {
+        "memory": 128,
+        "maxDuration": 10,
+        "regions": [
+          "fra1" 
+        ]
+      }
+    },
+    "builds": [
+      {
+        "src": "package.json",
+        "use": "@vercel/node"
+      }
+    ],
+    "routes": [
+      {
+        "src": "/api/get-binance-trades",
+        "dest": "/api/get-binance-trades.js"
+      },
+      {
+        "src": "/(.*)",
+        "dest": "/index.html"
+      }
+    ]
+  }

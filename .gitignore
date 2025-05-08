@@ -3,17 +3,11 @@
 # Node dependencies
 node_modules/
 
-# Netlify specific
-.netlify/
-netlify.toml # If you want to keep this local only, but often committed
-             # However, for this project, it's fine to commit as it has no secrets.
+# Vercel specific
+.vercel/
 
 # macOS specific
 .DS_Store
-
-# Optional: If you ever generate local config files for other experiments
-# env-config.js
-# config.js
 
 # Log files
 *.log

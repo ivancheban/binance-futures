@@ -1,6 +1,6 @@
 // script.js
 document.addEventListener('DOMContentLoaded', () => {
-    // API Key and Secret inputs are no longer here
+    // ... (other const declarations remain the same) ...
     const symbolInput = document.getElementById('symbol');
     const startTimeInput = document.getElementById('startTime');
     const endTimeInput = document.getElementById('endTime');
@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const totalCommissionSpan = document.getElementById('totalCommission');
     const commissionAssetSummarySpan = document.getElementById('commissionAssetSummary');
 
+
     // Load preferences from localStorage
     if (localStorage.getItem('tradeViewerSymbol')) {
         symbolInput.value = localStorage.getItem('tradeViewerSymbol');
@@ -24,10 +25,9 @@ document.addEventListener('DOMContentLoaded', () => {
         limitInput.value = "100"; // Default limit
     }
 
+    fetchTradesBtn.addEventListener('click', fetchTradesViaVercelFunction);
 
-    fetchTradesBtn.addEventListener('click', fetchTradesViaNetlifyFunction);
-
-    async function fetchTradesViaNetlifyFunction() {
+    async function fetchTradesViaVercelFunction() { // Renamed function for clarity
         const symbol = symbolInput.value.trim().toUpperCase();
         const limit = limitInput.value;
         const startTime = startTimeInput.value ? new Date(startTimeInput.value).getTime() : null;
@@ -35,13 +35,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Save preferences to localStorage
         if (symbol) localStorage.setItem('tradeViewerSymbol', symbol);
-        else localStorage.removeItem('tradeViewerSymbol'); // Clear if empty
+        else localStorage.removeItem('tradeViewerSymbol');
         localStorage.setItem('tradeViewerLimit', limit);
 
-
-        showStatus('Fetching trades securely...', false);
-        tradesTableBody.innerHTML = ''; // Clear previous trades
-        updateSummary([], true); // Reset summary
+        showStatus('Fetching trades securely via Vercel...', false);
+        tradesTableBody.innerHTML = '';
+        updateSummary([], true);
 
         let queryParams = `limit=${limit}`;
         if (symbol) {
@@ -54,16 +53,14 @@ document.addEventListener('DOMContentLoaded', () => {
             queryParams += `&endTime=${endTime}`;
         }
 
-        // Use the redirect path if configured in netlify.toml, otherwise the direct path
-        const functionUrl = `/api/get-binance-trades?${queryParams}`;
-        // const functionUrl = `/.netlify/functions/get-binance-trades?${queryParams}`; // Direct path
+        // Vercel serves functions from the /api path by default
+        const functionUrl = `/api/get-binance-trades?${queryParams}`; // <--- UPDATED URL
 
         try {
             const response = await fetch(functionUrl);
-            const data = await response.json(); // Try to parse JSON regardless of status for error messages
+            const data = await response.json();
 
             if (!response.ok) {
-                // data.error and data.code should be set by our Netlify function for known errors
                 const errorMessage = data.error || `Request failed with status: ${response.status}`;
                 const errorCode = data.code ? ` (Code: ${data.code})` : '';
                 throw new Error(`${errorMessage}${errorCode}`);
@@ -75,7 +72,6 @@ document.addEventListener('DOMContentLoaded', () => {
             } else if (data && Array.isArray(data) && data.length === 0) {
                 showStatus('No trades found for the given criteria.', false);
             } else {
-                // Should not happen if API is well-behaved and function handles errors
                 throw new Error("Received unexpected data format from server.");
             }
 
@@ -85,6 +81,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // displayTrades, updateSummary, showStatus functions remain the same
+    // ... (copy them from your existing script.js)
     function displayTrades(trades) {
         tradesTableBody.innerHTML = ''; // Clear previous just in case
         let runningTotalPnl = 0;
@@ -141,10 +139,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function showStatus(message, isError = false) {
         statusDiv.textContent = message;
-        statusDiv.className = isError ? 'error' : (message.includes('Fetching') ? 'info' : 'success'); // Adjust class for fetching
+        statusDiv.className = isError ? 'error' : (message.includes('Fetching') ? 'info' : 'success');
         if (!isError && message.startsWith("Successfully")) {
              setTimeout(() => {
-                if (statusDiv.textContent === message) statusDiv.textContent = ''; // Clear only if it's the same message
+                if (statusDiv.textContent === message) statusDiv.textContent = '';
              }, 5000);
         }
     }

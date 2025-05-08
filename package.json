@@ -1,12 +1,13 @@
 {
-  "name": "binance-trades-viewer",
+  "name": "binance-trades-viewer-vercel",
   "version": "1.0.0",
-  "description": "Binance Futures Trade History Viewer",
-  "main": "script.js",
+  "description": "Binance Futures Trade History Viewer on Vercel",
+  "main": "script.js", 
   "scripts": {
-    "start": "netlify dev"
+    "dev": "vercel dev",
+    "start": "vercel dev"
   },
-  "keywords": ["binance", "netlify", "crypto", "trades"],
+  "keywords": ["binance", "vercel", "crypto", "trades"],
   "author": "",
   "license": "ISC",
   "dependencies": {
