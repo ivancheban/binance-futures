@@ -123,6 +123,7 @@ This project is designed to be deployed on Vercel.
     vercel link
     ```
 3.  Create a `.env` file in the root of your project for local environment variables:
+    
     ```
     BINANCE_API_KEY=your_local_binance_api_key
     BINANCE_API_SECRET=your_local_binance_api_secret
