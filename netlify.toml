@@ -4,20 +4,21 @@
   functions = "netlify/functions"
   # publish = "." # Your publish directory
 
-# Specify a region for your functions
-# List of available regions: https://docs.netlify.com/functions/overview/#function-regions
-# Try a European or Asian region if your Binance.com account is eligible there.
+# Optional: redirect for cleaner API calls from the client
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
+
+# General functions settings (apply to all functions unless overridden)
 [functions]
-  directory = "netlify/functions"
-  # Example: For a European region
-  # node_bundler = "esbuild" # Recommended by Netlify, can help with some things
-  included_files = ["!node_modules/crypto-js/**", "!node_modules/node-fetch/**"] # Helps reduce bundle size if needed
+  directory = "netlify/functions" # This is usually redundant if [build].functions is set, but harmless
+  # node_bundler = "esbuild" # You can keep or remove this, it's a bundler choice
+  # included_files = ["!node_modules/crypto-js/**", "!node_modules/node-fetch/**"] # If you added this
 
-
-[[functions.get-binance-trades]] # Specific configuration for your function
-   # Choose a region like:
-   # "eu-central-1" (Frankfurt)
-   # "ap-southeast-1" (Singapore)
-   # "eu-west-2" (London)
-   # Check the Netlify docs for the most up-to-date list and what might be best.
-   region = "eu-central-1"
+# Specific configuration for the 'get-binance-trades' function
+[functions.get-binance-trades] # Single square brackets for a specific function config
+  region = "eu-central-1"
+  # You can add other per-function settings here if needed, like:
+  # memory = 256
+  # timeout = 20
