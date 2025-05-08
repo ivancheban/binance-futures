@@ -1,0 +1,16 @@
+{
+  "name": "binance-trades-viewer",
+  "version": "1.0.0",
+  "description": "Binance Futures Trade History Viewer",
+  "main": "script.js",
+  "scripts": {
+    "start": "netlify dev"
+  },
+  "keywords": ["binance", "netlify", "crypto", "trades"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "crypto-js": "^4.2.0",
+    "node-fetch": "^2.6.7"
+  }
+}

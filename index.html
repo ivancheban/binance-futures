@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binance Futures Trade History</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- CryptoJS is NOT needed on client-side for Netlify Functions method -->
+</head>
+<body>
+    <div class="container">
+        <h1>Binance Futures Trade History</h1>
+        <p class="info">
+            Trade data is fetched securely via a Netlify Function.
+            Your API keys are never exposed to the browser.
+        </p>
+
+        <div class="controls">
+            <!-- API Key and Secret inputs are REMOVED -->
+            <div class="input-group">
+                <label for="symbol">Symbol (e.g., BTCUSDT, optional):</label>
+                <input type="text" id="symbol" placeholder="Leave empty for all">
+            </div>
+            <div class="input-group">
+                <label for="startTime">Start Time (optional):</label>
+                <input type="datetime-local" id="startTime">
+            </div>
+            <div class="input-group">
+                <label for="endTime">End Time (optional):</label>
+                <input type="datetime-local" id="endTime">
+            </div>
+             <div class="input-group">
+                <label for="limit">Limit (max 1000):</label>
+                <input type="number" id="limit" value="100" min="1" max="1000">
+            </div>
+            <button id="fetchTradesBtn">Fetch Trades</button>
+        </div>
+
+        <div id="status"></div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Symbol</th>
+                        <th>Side</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Quote Qty</th>
+                        <th>Realized PnL</th>
+                        <th>Commission</th>
+                        <th>Comm. Asset</th>
+                        <th>Buyer/Maker</th>
+                        <th>Order ID</th>
+                    </tr>
+                </thead>
+                <tbody id="tradesTableBody">
+                    <!-- Trades will be populated here -->
+                </tbody>
+            </table>
+        </div>
+         <div class="summary">
+            Total Trades Fetched: <span id="totalTrades">0</span> |
+            Total Realized PnL: <span id="totalPnl">0.00</span> |
+            Total Commission: <span id="totalCommission">0.00</span> (<span id="commissionAssetSummary"></span>)
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

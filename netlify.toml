@@ -1,0 +1,8 @@
+[build]
+  functions = "netlify/functions" # Directory where your functions are
+  # publish = "public" # Your site's publish directory (e.g., root or 'dist')
+
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
