@@ -75,6 +75,7 @@ This project is designed to be deployed on Vercel.
         *   Root Directory: (Should be empty if your project is at the root of the repo)
 
 4.  **`vercel.json` Configuration:**
+
     The project includes a `vercel.json` file to configure routing and function properties. It's set up to use the `api/` directory for serverless functions.
 
     ```json
