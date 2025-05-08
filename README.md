@@ -109,6 +109,7 @@ This project is designed to be deployed on Vercel.
     *(Ensure this matches your latest working `vercel.json`)*
 
 5.  **Push to Deploy:**
+   
     Commit any changes and push to your main branch. Vercel will automatically build and deploy your application.
 
 ### Local Development (Optional)
