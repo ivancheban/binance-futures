@@ -1,8 +1,23 @@
-[build]
-  functions = "netlify/functions" # Directory where your functions are
-  # publish = "public" # Your site's publish directory (e.g., root or 'dist')
+# netlify.toml
 
-[[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/:splat"
-  status = 200
+[build]
+  functions = "netlify/functions"
+  # publish = "." # Your publish directory
+
+# Specify a region for your functions
+# List of available regions: https://docs.netlify.com/functions/overview/#function-regions
+# Try a European or Asian region if your Binance.com account is eligible there.
+[functions]
+  directory = "netlify/functions"
+  # Example: For a European region
+  # node_bundler = "esbuild" # Recommended by Netlify, can help with some things
+  included_files = ["!node_modules/crypto-js/**", "!node_modules/node-fetch/**"] # Helps reduce bundle size if needed
+
+
+[[functions.get-binance-trades]] # Specific configuration for your function
+   # Choose a region like:
+   # "eu-central-1" (Frankfurt)
+   # "ap-southeast-1" (Singapore)
+   # "eu-west-2" (London)
+   # Check the Netlify docs for the most up-to-date list and what might be best.
+   region = "eu-central-1"
