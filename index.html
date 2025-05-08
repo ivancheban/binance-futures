@@ -5,15 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Binance Futures Trade History</title>
     <link rel="stylesheet" href="style.css">
-    <!-- CryptoJS is NOT needed on client-side for Netlify Functions method -->
 </head>
 <body>
     <div class="container">
         <h1>Binance Futures Trade History</h1>
-       
+        <!-- Info message about secure fetching - you can keep or remove this as you like -->
+        <p class="info">
+            Trade data is fetched securely. Your API keys are never exposed to the browser.
+        </p>
 
         <div class="controls">
-            <!-- API Key and Secret inputs are REMOVED -->
             <div class="input-group">
                 <label for="symbol">Symbol (e.g., BTCUSDT, optional):</label>
                 <input type="text" id="symbol" placeholder="Leave empty for all">
@@ -33,7 +34,7 @@
             <button id="fetchTradesBtn">Fetch Trades</button>
         </div>
 
-        <div id="status"></div>
+        <!-- Status box <div id="status"></div> has been REMOVED -->
 
         <div class="table-container">
             <table>
@@ -41,14 +42,14 @@
                     <tr>
                         <th>Time</th>
                         <th>Symbol</th>
-                        <th>Side</th>
-                        <th>Price</th>
+                        <th>Direction</th> <!-- UPDATED -->
+                        <th>Exec. Price</th> <!-- UPDATED -->
                         <th>Quantity</th>
                         <th>Quote Qty</th>
                         <th>Realized PnL</th>
                         <th>Commission</th>
                         <th>Comm. Asset</th>
-                        <th>Buyer/Maker</th>
+                        <th>Role</th> <!-- UPDATED -->
                         <th>Order ID</th>
                     </tr>
                 </thead>

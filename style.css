@@ -23,7 +23,7 @@ h1 {
     padding-bottom: 10px;
 }
 
-.info { /* For the new info message */
+.info {
     background-color: #002b36;
     color: #93a1a1;
     padding: 10px;
@@ -69,6 +69,16 @@ h1 {
     color: #666;
 }
 
+/* Calendar Icon Styling */
+input[type="datetime-local"] {
+    color-scheme: dark; /* Hint for browser UI for dark theme */
+}
+input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+    filter: invert(1) brightness(1.5) contrast(200%); /* Make icon whiteish */
+    cursor: pointer;
+}
+
+
 button {
     grid-column: 1 / -1;
     padding: 10px 15px;
@@ -85,29 +95,7 @@ button:hover {
     background-color: #005fa3;
 }
 
-#status {
-    margin: 15px 0;
-    padding: 10px;
-    border-radius: 4px;
-    text-align: center;
-    min-height: 20px; /* So it doesn't jump around when empty */
-}
-#status.success {
-    background-color: #003300;
-    color: #ccffcc;
-    border: 1px solid #006600;
-}
-#status.error {
-    background-color: #330000;
-    color: #ffcccc;
-    border: 1px solid #660000;
-}
-#status.info { /* For "Fetching..." message */
-    background-color: #002b36;
-    color: #93a1a1;
-    border: 1px solid #073642;
-}
-
+/* Status div styling is removed as the div is removed */
 
 .table-container {
     overflow-x: auto;

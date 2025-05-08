@@ -1,59 +1,49 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // ... (other const declarations remain the same) ...
     const symbolInput = document.getElementById('symbol');
     const startTimeInput = document.getElementById('startTime');
     const endTimeInput = document.getElementById('endTime');
     const limitInput = document.getElementById('limit');
     const fetchTradesBtn = document.getElementById('fetchTradesBtn');
     const tradesTableBody = document.getElementById('tradesTableBody');
-    const statusDiv = document.getElementById('status');
+    // const statusDiv = document.getElementById('status'); // REMOVED
 
     const totalTradesSpan = document.getElementById('totalTrades');
     const totalPnlSpan = document.getElementById('totalPnl');
     const totalCommissionSpan = document.getElementById('totalCommission');
     const commissionAssetSummarySpan = document.getElementById('commissionAssetSummary');
 
-
-    // Load preferences from localStorage
     if (localStorage.getItem('tradeViewerSymbol')) {
         symbolInput.value = localStorage.getItem('tradeViewerSymbol');
     }
     if (localStorage.getItem('tradeViewerLimit')) {
         limitInput.value = localStorage.getItem('tradeViewerLimit');
     } else {
-        limitInput.value = "100"; // Default limit
+        limitInput.value = "100";
     }
 
     fetchTradesBtn.addEventListener('click', fetchTradesViaVercelFunction);
 
-    async function fetchTradesViaVercelFunction() { // Renamed function for clarity
+    async function fetchTradesViaVercelFunction() {
         const symbol = symbolInput.value.trim().toUpperCase();
         const limit = limitInput.value;
         const startTime = startTimeInput.value ? new Date(startTimeInput.value).getTime() : null;
         const endTime = endTimeInput.value ? new Date(endTimeInput.value).getTime() : null;
 
-        // Save preferences to localStorage
         if (symbol) localStorage.setItem('tradeViewerSymbol', symbol);
         else localStorage.removeItem('tradeViewerSymbol');
         localStorage.setItem('tradeViewerLimit', limit);
 
-        showStatus('Fetching trades securely via Vercel...', false);
+        // showStatus('Fetching trades securely via Vercel...', false); // REMOVED
+        console.log('Fetching trades...'); // Optional: keep console log for dev
         tradesTableBody.innerHTML = '';
         updateSummary([], true);
 
         let queryParams = `limit=${limit}`;
-        if (symbol) {
-            queryParams += `&symbol=${symbol}`;
-        }
-        if (startTime) {
-            queryParams += `&startTime=${startTime}`;
-        }
-        if (endTime) {
-            queryParams += `&endTime=${endTime}`;
-        }
+        if (symbol) queryParams += `&symbol=${symbol}`;
+        if (startTime) queryParams += `&startTime=${startTime}`;
+        if (endTime) queryParams += `&endTime=${endTime}`;
 
-        // Vercel serves functions from the /api path by default
-        const functionUrl = `/api/get-binance-trades?${queryParams}`; // <--- UPDATED URL
+        const functionUrl = `/api/get-binance-trades?${queryParams}`;
 
         try {
             const response = await fetch(functionUrl);
@@ -67,23 +57,26 @@ document.addEventListener('DOMContentLoaded', () => {
             
             if (data && Array.isArray(data) && data.length > 0) {
                 displayTrades(data);
-                showStatus(`Successfully fetched ${data.length} trades.`, false);
+                // showStatus(`Successfully fetched ${data.length} trades.`, false); // REMOVED
+                console.log(`Successfully fetched ${data.length} trades.`); // Optional
             } else if (data && Array.isArray(data) && data.length === 0) {
-                showStatus('No trades found for the given criteria.', false);
+                // showStatus('No trades found for the given criteria.', false); // REMOVED
+                console.log('No trades found for the given criteria.'); // Optional
             } else {
                 throw new Error("Received unexpected data format from server.");
             }
 
         } catch (error) {
-            console.error('Error fetching trades:', error);
-            showStatus(`Error: ${error.message}`, true);
+            console.error('Error fetching trades:', error.message); // Log full error for debugging
+            // showStatus(`Error: ${error.message}`, true); // REMOVED
+            // You might want to display errors differently now, e.g., in the summary or a modal
+            // For now, errors will only be in the console.
+            alert(`Error fetching trades: ${error.message}`); // Simple alert for now
         }
     }
 
-    // displayTrades, updateSummary, showStatus functions remain the same
-    // ... (copy them from your existing script.js)
     function displayTrades(trades) {
-        tradesTableBody.innerHTML = ''; // Clear previous just in case
+        tradesTableBody.innerHTML = '';
         let runningTotalPnl = 0;
         let runningTotalCommission = 0;
         let commissionAsset = trades.length > 0 ? trades[0].commissionAsset : '';
@@ -101,10 +94,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.warn("Mixed commission assets found. Summary might not be fully accurate for commissions.");
             }
 
+            let direction = trade.side; // Default
+            if (trade.side === "BUY") {
+                direction = "LONG";
+            } else if (trade.side === "SELL") {
+                direction = "SHORT";
+            }
+
             row.insertCell().textContent = new Date(trade.time).toLocaleString();
             row.insertCell().textContent = trade.symbol;
-            row.insertCell().textContent = trade.side;
-            row.insertCell().textContent = parseFloat(trade.price).toFixed(trade.symbol.endsWith('USDT') || trade.symbol.endsWith('BUSD') ? 2 : 8);
+            row.insertCell().textContent = direction; // UPDATED
+            row.insertCell().textContent = parseFloat(trade.price).toFixed(trade.symbol.endsWith('USDT') || trade.symbol.endsWith('BUSD') ? 2 : 8); // Exec. Price
             row.insertCell().textContent = parseFloat(trade.qty);
             row.insertCell().textContent = parseFloat(trade.quoteQty).toFixed(2);
             
@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             row.insertCell().textContent = commission.toFixed(Math.max(2, (commission.toString().split('.')[1] || '').length));
             row.insertCell().textContent = trade.commissionAsset;
-            row.insertCell().textContent = `${trade.buyer ? 'Buyer' : 'Seller'}/${trade.maker ? 'Maker' : 'Taker'}`;
+            row.insertCell().textContent = trade.maker ? 'Maker' : 'Taker'; // UPDATED (Role)
             row.insertCell().textContent = trade.orderId;
         });
         updateSummary(trades, false, runningTotalPnl, runningTotalCommission, commissionAsset);
@@ -136,13 +136,5 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function showStatus(message, isError = false) {
-        statusDiv.textContent = message;
-        statusDiv.className = isError ? 'error' : (message.includes('Fetching') ? 'info' : 'success');
-        if (!isError && message.startsWith("Successfully")) {
-             setTimeout(() => {
-                if (statusDiv.textContent === message) statusDiv.textContent = '';
-             }, 5000);
-        }
-    }
+    // showStatus function has been REMOVED
 });
