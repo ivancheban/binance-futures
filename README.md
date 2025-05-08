@@ -56,6 +56,7 @@ This project is designed to be deployed on Vercel.
     ```
 
 2.  **Install Dependencies (for local development or if Vercel requires it):**
+
     ```bash
     npm install
     ```
