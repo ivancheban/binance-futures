@@ -1,4 +1,3 @@
-// script.js
 document.addEventListener('DOMContentLoaded', () => {
     // ... (other const declarations remain the same) ...
     const symbolInput = document.getElementById('symbol');
